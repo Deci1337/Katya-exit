@@ -137,24 +137,6 @@ export function Navigation() {
         </div>
       </div>
 
-      {/* Mobile sticky bottom CTA — visible on small screens when scrolled */}
-      <div
-        className={cn(
-          'fixed bottom-0 left-0 right-0 z-40 md:hidden transition-all duration-500 ease-out-quart',
-          isScrolled && !isMenuOpen ? 'translate-y-0 opacity-100' : 'translate-y-full opacity-0 pointer-events-none'
-        )}
-      >
-        <div className="bg-white/95 backdrop-blur-md border-t border-exvia-border px-5 py-3 safe-area-bottom">
-          <a
-            href={navigationConfig.contactHref || '#contact'}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="block w-full py-4 text-center bg-psych-green text-white font-raleway font-bold text-base rounded-xl active:scale-[0.98] transition-transform"
-          >
-            Записаться на консультацию
-          </a>
-        </div>
-      </div>
     </>
   );
 }

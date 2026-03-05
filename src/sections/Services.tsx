@@ -1,7 +1,8 @@
 import { type ComponentType } from 'react';
 import { cn } from '@/lib/utils';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
-import { servicesConfig } from '@/config';
+import { servicesConfig, navigationConfig } from '@/config';
+import { AnimatedButton } from '@/components/AnimatedButton';
 import { Search, Layers, Circle, type LucideProps } from 'lucide-react';
 
 const iconMap: Record<string, ComponentType<LucideProps>> = { Search, Layers };
@@ -69,16 +70,25 @@ export function Services() {
                         Длительность {service.duration}
                       </p>
                       {service.price && (
-                        <p className="text-lg sm:text-xl font-bold font-raleway text-psych-green">Стоимость {service.price}</p>
+                        <p className="text-lg sm:text-xl font-bold font-raleway text-psych-green mb-6">Стоимость {service.price}</p>
                       )}
                       {service.stepPrice && (
-                        <p className="text-lg sm:text-xl font-bold font-raleway text-psych-green mt-2">{service.stepPrice}</p>
+                        <p className="text-lg sm:text-xl font-bold font-raleway text-psych-green mt-2 mb-6">{service.stepPrice}</p>
                       )}
                       {service.stepsNote && (
-                        <p className="mt-5 sm:mt-6 text-base sm:text-lg font-raleway text-exvia-black/70 italic border-l-2 border-psych-green/50 pl-4">
+                        <p className="mt-5 sm:mt-6 mb-6 text-base sm:text-lg font-raleway text-exvia-black/70 italic border-l-2 border-psych-green/50 pl-4">
                           {service.stepsNote}
                         </p>
                       )}
+
+                      <AnimatedButton
+                        href={navigationConfig.contactHref}
+                        variant="primary"
+                        size="lg"
+                        showIcon
+                      >
+                        Записаться сейчас
+                      </AnimatedButton>
                     </div>
                   </div>
                 </div>
