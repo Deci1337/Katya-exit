@@ -16,7 +16,7 @@ export function Testimonials() {
     if (isAnimating || testimonials.length === 0) return;
     setIsAnimating(true);
     setActiveIndex(index);
-    setTimeout(() => setIsAnimating(false), 700);
+    setTimeout(() => setIsAnimating(false), 500);
   }, [isAnimating, testimonials.length]);
 
   const nextSlide = useCallback(() => {
@@ -35,62 +35,57 @@ export function Testimonials() {
 
   if (testimonials.length === 0) return null;
 
+  const active = testimonials[activeIndex];
+
   return (
-    <section id="testimonials" className="w-full py-24 lg:py-32 bg-psych-green-light/30">
-      <div ref={sectionRef} className="container-large px-6 lg:px-12">
-        <div className="max-w-2xl mb-16">
+    <section id="testimonials" className="w-full py-16 sm:py-24 lg:py-32 bg-psych-green-light/30">
+      <div ref={sectionRef} className="container-large px-5 sm:px-6 lg:px-12">
+        <div className="mb-10 sm:mb-16">
           {testimonialsConfig.label && (
             <div className={cn('transition-all duration-800 ease-out-quart', isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4')}>
               <span className="text-xs font-geist-mono uppercase tracking-widest text-psych-green">{testimonialsConfig.label}</span>
             </div>
           )}
           {testimonialsConfig.heading && (
-            <h2 className={cn('font-raleway text-4xl lg:text-5xl font-bold text-exvia-black mt-4 transition-all duration-800 ease-out-quart', isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6')} style={{ transitionDelay: '100ms' }}>
+            <h2 className={cn('font-raleway text-3xl sm:text-4xl lg:text-5xl font-bold text-exvia-black mt-3 sm:mt-4 transition-all duration-800 ease-out-quart', isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6')} style={{ transitionDelay: '100ms' }}>
               {testimonialsConfig.heading}
             </h2>
           )}
         </div>
 
-        {/* Centered quote card */}
         <div className={cn('max-w-3xl mx-auto transition-all duration-800 ease-out-quart', isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8')} style={{ transitionDelay: '200ms' }}>
-          <div className="bg-white rounded-2xl p-10 lg:p-14 shadow-sm border border-exvia-border">
+          <div className="bg-white rounded-2xl p-6 sm:p-10 lg:p-14 shadow-sm border border-exvia-border">
+
             {/* Stars */}
-            <div className="flex gap-1 mb-8">
+            <div className="flex gap-1 mb-6 sm:mb-8">
               {[...Array(5)].map((_, i) => (
-                <Star key={i} className={cn('w-5 h-5', i < testimonials[activeIndex].rating ? 'fill-psych-green text-psych-green' : 'text-exvia-border')} />
+                <Star key={i} className={cn('w-4 h-4 sm:w-5 sm:h-5', i < active.rating ? 'fill-psych-green text-psych-green' : 'text-exvia-border')} />
               ))}
             </div>
 
-            {/* Quote text — animated, enough space so author block does not overlap */}
-            <div className="relative min-h-[180px] lg:min-h-[160px]">
-              {testimonials.map((t, index) => (
-                <blockquote
-                  key={index}
-                  className={cn(
-                    'absolute inset-0 font-raleway text-lg lg:text-xl text-exvia-black leading-relaxed italic transition-all duration-700 ease-out-quart',
-                    index === activeIndex ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 pointer-events-none'
-                  )}
-                >
-                  "{t.quote}"
-                </blockquote>
-              ))}
-            </div>
+            {/* Quote — в потоке, без absolute, fade при смене */}
+            <blockquote
+              key={activeIndex}
+              className="font-raleway text-base sm:text-lg lg:text-xl text-exvia-black leading-relaxed italic animate-fade-in"
+            >
+              "{active.quote}"
+            </blockquote>
 
-            {/* Author — one row in flow so it never overlaps the quote */}
-            <div className="mt-8 pt-8 border-t border-exvia-border flex items-center gap-3">
+            {/* Author — всегда под цитатой, никогда не перекрывает */}
+            <div className="mt-6 sm:mt-8 pt-6 sm:pt-8 border-t border-exvia-border flex items-center gap-3">
               <div className="w-10 h-10 rounded-full bg-psych-green/15 flex items-center justify-center flex-shrink-0">
                 <span className="text-sm font-semibold font-raleway text-psych-green-dark">
-                  {testimonials[activeIndex].author.split(' ')[0][0]}{testimonials[activeIndex].author.split(' ')[1]?.[0] ?? ''}
+                  {active.author.split(' ')[0][0]}{active.author.split(' ')[1]?.[0] ?? ''}
                 </span>
               </div>
               <div>
-                <p className="text-lg font-semibold font-raleway text-exvia-black">{testimonials[activeIndex].author}</p>
-                {testimonials[activeIndex].role && <p className="text-xs font-raleway text-exvia-black/50">{testimonials[activeIndex].role}</p>}
+                <p className="font-semibold font-raleway text-exvia-black">{active.author}</p>
+                {active.role && <p className="text-xs font-raleway text-exvia-black/50">{active.role}</p>}
               </div>
             </div>
 
             {/* Navigation */}
-            <div className="flex items-center justify-between mt-8">
+            <div className="flex items-center justify-between mt-6 sm:mt-8">
               <div className="flex gap-2">
                 {testimonials.map((_, index) => (
                   <button
@@ -110,6 +105,7 @@ export function Testimonials() {
                 </button>
               </div>
             </div>
+
           </div>
         </div>
       </div>
