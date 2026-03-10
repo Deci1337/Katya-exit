@@ -48,9 +48,9 @@ export function CTA() {
               </AnimatedButton>
             )}
 
-            <a href="https://t.me/katya_exit" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-sm font-raleway text-white/70 hover:text-white transition-colors group cursor-pointer">
+            <a href="https://t.me/ekaterina_sovet" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-sm font-raleway text-white/70 hover:text-white transition-colors group cursor-pointer">
               <Send className="w-4 h-4 text-psych-sage" />
-              <span>@katya.exit</span>
+              <span>@ekaterina_sovet</span>
             </a>
           </div>
         </div>

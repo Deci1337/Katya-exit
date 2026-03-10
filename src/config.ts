@@ -18,7 +18,7 @@ export const navigationConfig: NavigationConfig = {
     { label: "Контакт", href: "#contact" },
   ],
   contactLabel: "Записаться",
-  contactHref: "https://t.me/katya_exit",
+  contactHref: "https://t.me/ekaterina_sovet",
 };
 
 export interface HeroConfig { name: string; tagline: string; description: string; ctaText: string; ctaHref: string; roles: string[]; backgroundImage: string; }
@@ -27,7 +27,7 @@ export const heroConfig: HeroConfig = {
   tagline: "Я поддерживаю в кризисах, помогая найти ясность и направление без давления и спешки.",
   description: "Помогаю найти выход в кризисной ситуации.\n\nЯ знаю, как это: когда страшно сделать шаг, когда мысли по кругу, когда хочется спрятаться или, наоборот, всё резко разрушить, когда старые способы больше не работают.\n\nВ такие моменты не нужна мотивация. Не нужны советы. И не нужна спешка. Нужна ясность. И направление.",
   ctaText: "Записаться на консультацию сейчас",
-  ctaHref: "https://t.me/katya_exit",
+  ctaHref: "https://t.me/ekaterina_sovet",
   roles: ["Психолог", "Наставник"],
   backgroundImage: "/images/hero-bg.jpg",
 };
@@ -174,7 +174,7 @@ export const ctaConfig: CTAConfig = {
   heading: "Готовы сделать первый шаг?",
   description: "Запишитесь на консультацию прямо сейчас. Первый шаг — это уже изменение. Я буду рада сопровождать вас на пути к ясности.",
   buttonText: "Записаться на консультацию сейчас",
-  buttonHref: "https://t.me/katya_exit",
+  buttonHref: "https://t.me/ekaterina_sovet",
   email: "",
   backgroundImage: "/images/cta-bg.jpg",
 };
@@ -196,12 +196,14 @@ export const footerConfig: FooterConfig = {
     {
       title: "Связаться",
       links: [
-        { label: "Telegram", href: "https://t.me/katya_exit" },
+        { label: "Telegram", href: "https://t.me/ekaterina_sovet" },
+        { label: "ВКонтакте", href: "https://vk.ru/ekaterina.sovet" },
       ],
     },
   ],
   socialLinks: [
-    { iconName: "Send", href: "https://t.me/katya_exit", label: "Telegram" },
+    { iconName: "Send", href: "https://t.me/ekaterina_sovet", label: "Telegram" },
+    { iconName: "VK", href: "https://vk.ru/ekaterina.sovet", label: "ВКонтакте" },
   ],
   newsletterHeading: "",
   newsletterDescription: "",
