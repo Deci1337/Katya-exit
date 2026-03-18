@@ -1,10 +1,10 @@
-// Site configuration — Екатерина Советкина, психолог
+// Site configuration — Екатерина Советкина, наставник
 
 export interface SiteConfig { language: string; title: string; description: string; }
 export const siteConfig: SiteConfig = {
   language: "ru",
-  title: "Екатерина Советкина | Психолог",
-  description: "Практикующий психолог. Помогаю найти выход в кризисной ситуации — без давления и спешки. Онлайн-консультации.",
+  title: "Екатерина Советкина | Наставник",
+  description: "Наставник. Помогаю найти выход в кризисной ситуации — без давления и спешки. Онлайн-консультации.",
 };
 
 export interface NavLink { label: string; href: string; }
@@ -28,7 +28,7 @@ export const heroConfig: HeroConfig = {
   description: "Помогаю найти выход в кризисной ситуации.\n\nЯ знаю, как это: когда страшно сделать шаг, когда мысли по кругу, когда хочется спрятаться или, наоборот, всё резко разрушить, когда старые способы больше не работают.\n\nВ такие моменты не нужна мотивация. Не нужны советы. И не нужна спешка. Нужна ясность. И направление.",
   ctaText: "Записаться на консультацию сейчас",
   ctaHref: "https://t.me/ekaterina_sovet",
-  roles: ["Психолог", "Наставник"],
+  roles: ["Наставник"],
   backgroundImage: "/images/hero-bg.jpg",
 };
 
@@ -74,6 +74,16 @@ export const servicesConfig: ServicesConfig = {
   label: "",
   heading: "Услуги и тарифы",
   services: [
+    {
+      iconName: "UserPlus",
+      title: "Консультация-знакомство",
+      bullets: [
+        "Для тех, кто сомневается. Кто хочет почувствовать работу со мной.",
+        "Вы смотрите на меня, я смотрю на вас.",
+      ],
+      duration: "30–40 минут",
+      price: "4.000₽",
+    },
     {
       iconName: "Search",
       title: "Диагностическая сессия (60−75 минут)",
@@ -184,12 +194,13 @@ export interface SocialLink { iconName: string; href: string; label: string; }
 export interface FooterConfig { logo: string; description: string; columns: FooterLinkColumn[]; socialLinks: SocialLink[]; newsletterHeading: string; newsletterDescription: string; newsletterButtonText: string; newsletterPlaceholder: string; copyright: string; credit: string; }
 export const footerConfig: FooterConfig = {
   logo: "Екатерина",
-  description: "Практикующий психолог. Помогаю найти выход в кризисной ситуации без давления и спешки.",
+  description: "Наставник. Помогаю найти выход в кризисной ситуации без давления и спешки.",
   columns: [
     {
       title: "Услуги",
       links: [
-        { label: "Диагностическая сессия", href: "#services" },
+        { label: "Консультация-знакомство", href: "#service-intro" },
+        { label: "Диагностическая сессия", href: "#service-diagnostic" },
         { label: "Наставничество", href: "#service-mentoring" },
       ],
     },

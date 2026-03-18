@@ -3,12 +3,13 @@ import { cn } from '@/lib/utils';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 import { servicesConfig, navigationConfig } from '@/config';
 import { AnimatedButton } from '@/components/AnimatedButton';
-import { Search, Layers, Circle, type LucideProps } from 'lucide-react';
+import { Search, Layers, UserPlus, Circle, type LucideProps } from 'lucide-react';
 
-const iconMap: Record<string, ComponentType<LucideProps>> = { Search, Layers };
+const iconMap: Record<string, ComponentType<LucideProps>> = { Search, Layers, UserPlus };
 function getIcon(name: string): ComponentType<LucideProps> { return iconMap[name] || Circle; }
 
 const serviceAnchorMap: Record<string, string> = {
+  "Консультация-знакомство": "service-intro",
   "Диагностическая сессия (60−75 минут)": "service-diagnostic",
   "Наставничество (3 месяца)": "service-mentoring",
 };
