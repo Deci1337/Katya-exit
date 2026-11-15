@@ -1,142 +1,100 @@
 import { useState, useEffect, type MouseEvent } from 'react';
+import { Menu, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { AnimatedButton } from './AnimatedButton';
 import { navigationConfig } from '@/config';
 
 export function Navigation() {
-  if (!navigationConfig.logo && navigationConfig.links.length === 0) return null;
-
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
-  const [isVisible, setIsVisible] = useState(false);
-
-  const darkNav = isScrolled;
 
   useEffect(() => {
-    const timer = setTimeout(() => setIsVisible(true), 1800);
-    return () => clearTimeout(timer);
-  }, []);
-
-  useEffect(() => {
-    const handleScroll = () => setIsScrolled(window.scrollY > 50);
+    const handleScroll = () => setIsScrolled(window.scrollY > 24);
+    handleScroll();
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  useEffect(() => {
+    document.body.style.overflow = isMenuOpen ? 'hidden' : '';
+  }, [isMenuOpen]);
+
   const handleNavClick = (e: MouseEvent<HTMLAnchorElement>, href: string) => {
     e.preventDefault();
-    const element = document.querySelector(href);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-      setIsMenuOpen(false);
-    }
+    setIsMenuOpen(false);
+    document.querySelector(href)?.scrollIntoView({ behavior: 'smooth' });
   };
 
   return (
     <>
       <nav
         className={cn(
-          'fixed top-0 left-0 right-0 z-50 transition-all duration-500 ease-out-circ',
-          isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4',
-          darkNav ? 'bg-white/90 backdrop-blur-md shadow-sm' : 'bg-transparent'
+          'fixed inset-x-0 top-0 z-50 border-b transition-colors duration-300',
+          isScrolled || isMenuOpen ? 'border-cocoa/10 bg-milk/90 backdrop-blur-md' : 'border-transparent bg-transparent'
         )}
       >
-        <div className="w-full px-5 lg:px-12 py-4">
-          <div className="flex items-center justify-between">
-            {/* LEFT: hamburger */}
+        <div className="container-large flex h-16 items-center justify-between px-5 sm:px-8 lg:h-20 lg:px-12">
+          <a
+            href="#"
+            onClick={(e) => { e.preventDefault(); setIsMenuOpen(false); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+            className="font-display text-2xl font-semibold text-cocoa"
+          >
+            {navigationConfig.logo}
+          </a>
+
+          <div className="hidden items-center gap-8 md:flex">
+            {navigationConfig.links.map((link) => (
+              <a
+                key={link.label}
+                href={link.href}
+                onClick={(e) => handleNavClick(e, link.href)}
+                className="text-[15px] text-cocoa/75 transition-colors hover:text-cocoa"
+              >
+                {link.label}
+              </a>
+            ))}
+          </div>
+
+          <div className="flex items-center gap-2">
+            <AnimatedButton href={navigationConfig.contactHref} size="sm" className="hidden sm:inline-flex">
+              {navigationConfig.contactLabel}
+            </AnimatedButton>
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="relative w-8 h-8 flex flex-col justify-center gap-[5px] flex-shrink-0 z-[60] p-1"
-              aria-label="Toggle menu"
+              className="-mr-2 flex h-10 w-10 items-center justify-center rounded-full text-cocoa md:hidden"
+              aria-label={isMenuOpen ? 'Закрыть меню' : 'Открыть меню'}
+              aria-expanded={isMenuOpen}
             >
-              <span
-                className={cn(
-                  'w-full h-0.5 transition-all duration-500 ease-out-quad origin-center',
-                  isMenuOpen ? 'bg-exvia-black translate-y-[7px] rotate-[-45deg]' : darkNav ? 'bg-exvia-black' : 'bg-white'
-                )}
-              />
-              <span
-                className={cn(
-                  'w-full h-0.5 transition-all duration-300 ease-out-quad',
-                  isMenuOpen ? 'bg-exvia-black scale-0 opacity-0' : darkNav ? 'bg-exvia-black' : 'bg-white'
-                )}
-              />
-              <span
-                className={cn(
-                  'w-full h-0.5 transition-all duration-500 ease-out-quad origin-center',
-                  isMenuOpen ? 'bg-exvia-black -translate-y-[7px] rotate-[45deg]' : darkNav ? 'bg-exvia-black' : 'bg-white'
-                )}
-              />
+              {isMenuOpen ? <X className="h-5 w-5" strokeWidth={1.5} /> : <Menu className="h-5 w-5" strokeWidth={1.5} />}
             </button>
-
-            {/* RIGHT: logo + CTA */}
-            <div className="flex items-center gap-4 lg:gap-6">
-              {navigationConfig.logo && (
-                <a href="#" onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>
-                  <span className={cn(
-                    'text-xl lg:text-2xl font-lora font-semibold tracking-tight transition-colors duration-500',
-                    darkNav ? 'text-psych-green-dark' : 'text-white'
-                  )}>
-                    {navigationConfig.logo}
-                  </span>
-                </a>
-              )}
-              {navigationConfig.contactLabel && (
-                /* Glow wrapper — only active when nav is dark (scrolled) */
-                <div className={cn(darkNav ? 'animate-cta-glow' : '')}>
-                  <AnimatedButton
-                    href={navigationConfig.contactHref || '#contact'}
-                    variant={darkNav ? 'primary' : 'outline-white'}
-                    size="md"
-                  >
-                    {navigationConfig.contactLabel}
-                  </AnimatedButton>
-                </div>
-              )}
-            </div>
           </div>
         </div>
       </nav>
 
-      {/* Full-screen overlay */}
       <div
         className={cn(
-          'fixed inset-0 z-40 bg-white transition-all duration-500 ease-out-cubic',
-          isMenuOpen ? 'opacity-100 visible' : 'opacity-0 invisible pointer-events-none'
+          'fixed inset-0 z-40 bg-milk transition-opacity duration-300 md:hidden',
+          isMenuOpen ? 'opacity-100' : 'pointer-events-none opacity-0'
         )}
       >
-        <div className="flex flex-col items-center justify-center h-full gap-6 lg:gap-8 px-6">
-          {navigationConfig.links.map((link, index) => (
-            <a
-              key={link.label}
-              href={link.href}
-              onClick={(e) => handleNavClick(e, link.href)}
-              className={cn(
-                'text-3xl sm:text-4xl lg:text-5xl font-raleway font-bold text-exvia-black transition-all duration-500 ease-out-quart hover:text-psych-green',
-                isMenuOpen ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-              )}
-              style={{ transitionDelay: isMenuOpen ? `${index * 80}ms` : '0ms' }}
-            >
-              {link.label}
-            </a>
-          ))}
-          {navigationConfig.contactLabel && (
-            <a
-              href={navigationConfig.contactHref || '#contact'}
-              target="_blank"
-              rel="noopener noreferrer"
-              className={cn(
-                'mt-4 w-full max-w-xs py-5 text-center bg-psych-green text-white font-raleway font-bold text-lg rounded-2xl transition-all duration-500 ease-out-quart active:scale-95',
-                isMenuOpen ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-              )}
-              style={{ transitionDelay: isMenuOpen ? `${navigationConfig.links.length * 80}ms` : '0ms' }}
-            >
-              {navigationConfig.contactLabel}
-            </a>
-          )}
+        <div className="flex h-full flex-col justify-between px-5 pb-10 pt-28">
+          <div className="flex flex-col gap-2">
+            {navigationConfig.links.map((link) => (
+              <a
+                key={link.label}
+                href={link.href}
+                onClick={(e) => handleNavClick(e, link.href)}
+                className="border-b border-cocoa/10 py-4 font-display text-4xl text-cocoa"
+              >
+                {link.label}
+              </a>
+            ))}
+          </div>
+          <AnimatedButton href={navigationConfig.contactHref} size="lg" className="w-full">
+            {navigationConfig.contactLabel}
+          </AnimatedButton>
         </div>
       </div>
-
     </>
   );
 }

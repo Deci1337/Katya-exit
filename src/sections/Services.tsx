@@ -1,101 +1,100 @@
-import { type ComponentType } from 'react';
 import { cn } from '@/lib/utils';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 import { servicesConfig, navigationConfig } from '@/config';
 import { AnimatedButton } from '@/components/AnimatedButton';
-import { Search, Layers, UserPlus, Circle, type LucideProps } from 'lucide-react';
 
-const iconMap: Record<string, ComponentType<LucideProps>> = { Search, Layers, UserPlus };
-function getIcon(name: string): ComponentType<LucideProps> { return iconMap[name] || Circle; }
-
-const serviceAnchorMap: Record<string, string> = {
-  "Консультация-знакомство": "service-intro",
-  "Диагностическая сессия (60−75 минут)": "service-diagnostic",
-  "Наставничество (3 месяца)": "service-mentoring",
-};
+const anchors = ['service-intro', 'service-diagnostic', 'service-mentoring'];
+// Staircase: each next step stands higher than the previous one (desktop)
+const stepLift = ['md:mt-24', 'md:mt-12', 'md:mt-0'];
 
 export function Services() {
-  if (!servicesConfig.heading && servicesConfig.services.length === 0) return null;
-
-  const { ref: headerRef, isVisible: headerVisible } = useScrollAnimation({ threshold: 0.3 });
-  const { ref: servicesRef, isVisible: servicesVisible } = useScrollAnimation({ threshold: 0.1 });
+  const { ref, isVisible } = useScrollAnimation({ threshold: 0.1 });
+  const services = servicesConfig.services.map((s, i) => ({ ...s, anchor: anchors[i] }));
+  const single = services.filter((s) => !s.steps);
+  const program = services.find((s) => s.steps);
 
   return (
-    <section id="services" className="w-full py-16 sm:py-24 lg:py-32 bg-white">
-      <div className="container-large px-5 sm:px-6 lg:px-12">
-        <div ref={headerRef} className="mb-10 sm:mb-16">
-          {servicesConfig.heading && (
-            <h2 className={cn('font-raleway text-3xl sm:text-4xl lg:text-5xl font-bold text-psych-green transition-all duration-800 ease-out-quart', headerVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6')}>
-              {servicesConfig.heading}
-            </h2>
-          )}
+    <section id="services" className="w-full scroll-mt-16 bg-milk-50 py-24 lg:py-32">
+      <div ref={ref} className="container-large px-5 sm:px-8 lg:px-12">
+        <div className={cn('reveal max-w-2xl', isVisible && 'is-in')}>
+          <p className="eyebrow">Форматы работы</p>
+          <h2 className="mt-6 text-[clamp(2.25rem,4.5vw,3.5rem)] leading-[1.05] text-cocoa">{servicesConfig.heading}</h2>
         </div>
 
-        {servicesConfig.services.length > 0 && (
-          <div ref={servicesRef} className={cn('space-y-10 sm:space-y-16 lg:space-y-20 transition-all duration-800 ease-out-quart', servicesVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8')}>
-            {servicesConfig.services.map((service) => {
-              const Icon = getIcon(service.iconName);
-              const anchorId = serviceAnchorMap[service.title];
-              return (
-                <div key={service.title} id={anchorId} className="border-b border-exvia-border pb-10 sm:pb-14 lg:pb-16 last:border-0 last:pb-0 scroll-mt-20">
-                  <div className="flex flex-col gap-5 sm:gap-6 lg:flex-row lg:gap-12">
-                    <div className="flex-shrink-0 w-12 h-12 sm:w-14 sm:h-14 flex items-center justify-center rounded-xl bg-psych-green/10 border border-psych-green/20">
-                      <Icon className="w-6 h-6 sm:w-7 sm:h-7 text-psych-green" />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <h3 className="font-raleway text-xl sm:text-2xl font-bold text-exvia-black mb-4 sm:mb-6">{service.title}</h3>
+        <div className="mt-14 grid gap-5 md:grid-cols-2 lg:mt-20 lg:gap-6">
+          {single.map((service, i) => (
+            <article
+              key={service.title}
+              id={service.anchor}
+              className={cn('reveal flex scroll-mt-24 flex-col rounded-[20px] border border-cocoa/10 bg-milk p-6 sm:p-8 lg:p-10', isVisible && 'is-in')}
+              style={{ transitionDelay: `${100 + i * 80}ms` }}
+            >
+              <div className="flex flex-col gap-1 sm:flex-row sm:items-baseline sm:justify-between sm:gap-4">
+                <h3 className="text-[32px] leading-tight text-cocoa lg:text-4xl">{service.title}</h3>
+                <span className="shrink-0 text-sm text-cocoa/60">{service.duration}</span>
+              </div>
 
-                      {service.bullets && (
-                        <ul className="space-y-2 mb-5 sm:mb-6">
-                          {service.bullets.map((b, i) => (
-                            <li key={i} className="flex gap-2 text-base sm:text-lg font-raleway text-exvia-black/80">
-                              <span className="text-psych-green mt-0.5 flex-shrink-0">—</span>
-                              <span>{b}</span>
-                            </li>
-                          ))}
-                        </ul>
-                      )}
+              {service.bullets && (
+                <ul className="mb-8 mt-6 space-y-3">
+                  {service.bullets.map((b) => (
+                    <li key={b} className="flex gap-3 text-base leading-relaxed text-cocoa/80">
+                      <span aria-hidden className="mt-[11px] h-px w-3 shrink-0 bg-wine" />
+                      <span>{b}</span>
+                    </li>
+                  ))}
+                </ul>
+              )}
 
-                      {service.steps && (
-                        <div className="space-y-6 sm:space-y-8 mb-6 sm:mb-8">
-                          {service.steps.map((s, i) => (
-                            <div key={i}>
-                              <h4 className="font-raleway text-lg sm:text-xl font-bold text-exvia-black mb-2">{s.title}</h4>
-                              <p className="text-base sm:text-lg font-raleway text-exvia-black/80 leading-relaxed">{s.text}</p>
-                            </div>
-                          ))}
-                        </div>
-                      )}
-
-                      <p className="text-base sm:text-lg font-raleway text-exvia-black/60 mb-2">
-                        Длительность {service.duration}
-                      </p>
-                      {service.price && (
-                        <p className="text-lg sm:text-xl font-bold font-raleway text-psych-green mb-6">Стоимость {service.price}</p>
-                      )}
-                      {service.stepPrice && (
-                        <p className="text-lg sm:text-xl font-bold font-raleway text-psych-green mt-2 mb-6">{service.stepPrice}</p>
-                      )}
-                      {service.stepsNote && (
-                        <p className="mt-5 sm:mt-6 mb-6 text-base sm:text-lg font-raleway text-exvia-black/70 italic border-l-2 border-psych-green/50 pl-4">
-                          {service.stepsNote}
-                        </p>
-                      )}
-
-                      <AnimatedButton
-                        href={navigationConfig.contactHref}
-                        variant="primary"
-                        size="lg"
-                        showIcon
-                      >
-                        Записаться сейчас
-                      </AnimatedButton>
-                    </div>
-                  </div>
+              <div className="mt-auto flex flex-wrap items-end justify-between gap-6 border-t border-cocoa/10 pt-6">
+                <div>
+                  <p className="text-sm text-cocoa/60">Стоимость</p>
+                  <p className={cn('mt-1 font-display text-4xl font-semibold tabular-nums lining-nums', service.price === 'Бесплатно' ? 'text-wine' : 'text-cocoa')}>
+                    {service.price}
+                  </p>
                 </div>
-              );
-            })}
-          </div>
+                <AnimatedButton href={navigationConfig.contactHref} variant="secondary" showIcon>
+                  Записаться
+                </AnimatedButton>
+              </div>
+            </article>
+          ))}
+        </div>
+
+        {program && (
+          <article
+            id={program.anchor}
+            className={cn('reveal mt-5 scroll-mt-24 rounded-[24px] bg-cocoa p-6 text-milk sm:p-8 lg:mt-6 lg:p-12', isVisible && 'is-in')}
+            style={{ transitionDelay: '260ms' }}
+          >
+            <div className="flex flex-wrap items-baseline justify-between gap-4">
+              <h3 className="text-[40px] leading-tight lg:text-5xl">{program.title}</h3>
+              <span className="text-sm text-milk/60">{program.duration} · три ступени</span>
+            </div>
+
+            <ol className="mt-10 grid gap-4 md:grid-cols-3 md:items-start lg:mt-12 lg:gap-6">
+              {program.steps!.map((step, i) => {
+                const [num, title] = step.title.split(': ');
+                return (
+                  <li key={step.title} className={cn('rounded-2xl border border-milk/10 bg-milk/[0.04] p-6 lg:p-8', stepLift[i])}>
+                    <span className="text-sm text-nude">{num}</span>
+                    <h4 className="mt-3 font-display text-[28px] font-medium leading-tight">{title ?? step.title}</h4>
+                    <p className="mt-4 text-[15px] leading-relaxed text-milk/70">{step.text}</p>
+                  </li>
+                );
+              })}
+            </ol>
+
+            <div className="mt-10 flex flex-col gap-8 border-t border-milk/10 pt-8 lg:mt-12 lg:flex-row lg:items-end lg:justify-between">
+              <div>
+                <p className="text-sm text-milk/60">Стоимость одной ступени</p>
+                <p className="mt-1 font-display text-5xl font-semibold tabular-nums lining-nums">{program.stepPrice}</p>
+                {program.stepsNote && <p className="mt-4 max-w-md text-[15px] text-nude">{program.stepsNote}</p>}
+              </div>
+              <AnimatedButton href={navigationConfig.contactHref} variant="light" size="lg" showIcon className="w-full sm:w-auto sm:self-start lg:self-auto">
+                Записаться на наставничество
+              </AnimatedButton>
+            </div>
+          </article>
         )}
       </div>
     </section>

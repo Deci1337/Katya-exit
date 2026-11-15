@@ -17,8 +17,6 @@ function getIcon(iconName: string): ComponentType<LucideProps> {
 }
 
 export function Footer() {
-  if (!footerConfig.logo && footerConfig.columns.length === 0 && footerConfig.socialLinks.length === 0) return null;
-
   const { ref, isVisible } = useScrollAnimation({ threshold: 0.1 });
 
   const handleNavClick = (e: MouseEvent<HTMLAnchorElement>, href: string) => {
@@ -32,135 +30,56 @@ export function Footer() {
   };
 
   return (
-    <footer ref={ref} className="w-full bg-[#0F1F1A] text-white py-12 sm:py-16 lg:py-24 pb-24 md:pb-16 lg:pb-24">
-      <div className="container-large px-5 sm:px-6 lg:px-12">
-        <div className="grid sm:grid-cols-2 lg:grid-cols-12 gap-8 lg:gap-8">
-          {/* Brand Column */}
-          <div
-            className={cn(
-              'lg:col-span-4 space-y-6 transition-all duration-800 ease-out-quart',
-              isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
-            )}
-          >
-            {footerConfig.logo && (
-              <a href="#" className="inline-block">
-                <span className="text-2xl font-lora font-semibold tracking-tight text-psych-sage">{footerConfig.logo}</span>
-              </a>
-            )}
-            {footerConfig.description && (
-              <p className="text-sm text-white/60 max-w-xs leading-relaxed">
-                {footerConfig.description}
-              </p>
-            )}
-
-            {/* Social Links */}
-            {footerConfig.socialLinks.length > 0 && (
-              <div className="flex gap-3 pt-2">
-                {footerConfig.socialLinks.map((social) => {
-                  const Icon = getIcon(social.iconName);
-                  return (
-                    <a
-                      key={social.label}
-                      href={social.href}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="w-10 h-10 border border-psych-sage/30 rounded-full flex items-center justify-center hover:bg-psych-green hover:border-psych-green transition-all duration-300 cursor-pointer"
-                      aria-label={social.label}
-                    >
-                      <Icon className="w-4 h-4" />
-                    </a>
-                  );
-                })}
-              </div>
-            )}
+    <footer ref={ref} className="w-full bg-cocoa-900 py-16 text-milk lg:py-20">
+      <div className={cn('reveal container-large px-5 sm:px-8 lg:px-12', isVisible && 'is-in')}>
+        <div className="grid gap-12 sm:grid-cols-2 lg:grid-cols-12 lg:gap-8">
+          <div className="space-y-5 sm:col-span-2 lg:col-span-6">
+            <a href="#" className="font-display text-3xl font-semibold">{footerConfig.logo}</a>
+            <p className="max-w-xs text-[15px] leading-relaxed text-milk/60">{footerConfig.description}</p>
+            <div className="flex gap-2 pt-1">
+              {footerConfig.socialLinks.map((social) => {
+                const Icon = getIcon(social.iconName);
+                return (
+                  <a
+                    key={social.label}
+                    href={social.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex h-10 w-10 items-center justify-center rounded-full border border-milk/15 text-milk/80 transition-colors hover:border-milk hover:text-milk"
+                    aria-label={social.label}
+                  >
+                    <Icon className="h-4 w-4" strokeWidth={1.5} />
+                  </a>
+                );
+              })}
+            </div>
           </div>
 
-          {/* Links Columns */}
-          {footerConfig.columns.map((column, colIndex) => (
-            <div
-              key={column.title}
-              className={cn(
-                'lg:col-span-2 sm:col-span-1 transition-all duration-800 ease-out-quart',
-                isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
-              )}
-              style={{ transitionDelay: `${(colIndex + 1) * 100}ms` }}
-            >
-              <h4 className="text-xs font-geist-mono uppercase tracking-widest text-white/40 mb-4">
-                {column.title}
-              </h4>
-              <ul className="space-y-3">
+          {footerConfig.columns.map((column) => (
+            <div key={column.title} className="lg:col-span-3">
+              <h4 className="font-sans text-sm text-milk/45">{column.title}</h4>
+              <ul className="mt-4 space-y-3">
                 {column.links.map((link) => (
                   <li key={link.label}>
                     <a
                       href={link.href}
                       onClick={(e) => handleNavClick(e, link.href)}
-                      className="text-sm text-white/70 hover:text-white transition-colors inline-flex items-center gap-1 group"
+                      target={link.href.startsWith('http') ? '_blank' : undefined}
+                      rel={link.href.startsWith('http') ? 'noopener noreferrer' : undefined}
+                      className="group inline-flex items-center gap-1 text-[15px] text-milk/75 transition-colors hover:text-milk"
                     >
                       {link.label}
-                      <ArrowUpRight className="w-3 h-3 opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-200" />
+                      <ArrowUpRight className="h-3.5 w-3.5 opacity-0 transition-opacity group-hover:opacity-100" strokeWidth={1.5} />
                     </a>
                   </li>
                 ))}
               </ul>
             </div>
           ))}
-
-          {/* Newsletter Column */}
-          {footerConfig.newsletterHeading && (
-            <div
-              className={cn(
-                'lg:col-span-2 transition-all duration-800 ease-out-quart',
-                isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
-              )}
-              style={{ transitionDelay: '400ms' }}
-            >
-              <h4 className="text-xs font-geist-mono uppercase tracking-widest text-white/40 mb-4">
-                {footerConfig.newsletterHeading}
-              </h4>
-              {footerConfig.newsletterDescription && (
-                <p className="text-sm text-white/60 mb-4">
-                  {footerConfig.newsletterDescription}
-                </p>
-              )}
-              <form className="space-y-3" onSubmit={(e) => e.preventDefault()}>
-                <input
-                  type="email"
-                  placeholder={footerConfig.newsletterPlaceholder || "your@email.com"}
-                  className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-sm text-white placeholder:text-white/40 focus:outline-none focus:border-white/30 transition-colors"
-                />
-                {footerConfig.newsletterButtonText && (
-                  <button
-                    type="submit"
-                    className="w-full px-4 py-3 bg-white text-exvia-black text-sm font-medium rounded-lg hover:bg-white/90 transition-colors"
-                  >
-                    {footerConfig.newsletterButtonText}
-                  </button>
-                )}
-              </form>
-            </div>
-          )}
         </div>
 
-        {/* Bottom Bar */}
-        {(footerConfig.copyright || footerConfig.credit) && (
-          <div
-            className={cn(
-              'mt-16 pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-4 transition-all duration-800 ease-out-quart',
-              isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
-            )}
-            style={{ transitionDelay: '500ms' }}
-          >
-            {footerConfig.copyright && (
-              <p className="text-xs text-white/40">
-                {footerConfig.copyright}
-              </p>
-            )}
-            {footerConfig.credit && (
-              <p className="text-xs text-white/40">
-                {footerConfig.credit}
-              </p>
-            )}
-          </div>
+        {footerConfig.copyright && (
+          <p className="mt-16 border-t border-milk/10 pt-8 text-sm text-milk/45">{footerConfig.copyright}</p>
         )}
       </div>
     </footer>

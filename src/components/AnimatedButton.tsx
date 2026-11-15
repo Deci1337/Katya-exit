@@ -6,7 +6,7 @@ interface AnimatedButtonProps {
   children: ReactNode;
   onClick?: () => void;
   href?: string;
-  variant?: 'primary' | 'secondary' | 'outline' | 'outline-white';
+  variant?: 'primary' | 'secondary' | 'light';
   size?: 'sm' | 'md' | 'lg';
   showIcon?: boolean;
   className?: string;
@@ -24,17 +24,15 @@ export function AnimatedButton({
   style,
 }: AnimatedButtonProps) {
   const baseStyles = cn(
-    'relative font-geist-mono inline-flex items-center justify-center gap-2',
-    'transition-all duration-300 ease-out-quad',
-    'hover:opacity-90 active:scale-[0.97]',
+    'group inline-flex items-center justify-center gap-2 rounded-full font-medium',
+    'transition-[background-color,color,border-color,transform] duration-200 ease-out active:scale-[0.98]',
     {
-      'bg-psych-green text-white hover:bg-psych-green-dark hover:opacity-100': variant === 'primary',
-      'bg-white text-exvia-black border border-exvia-border hover:border-psych-green hover:opacity-100': variant === 'secondary',
-      'bg-transparent text-exvia-black border border-exvia-black hover:bg-exvia-black hover:text-white hover:opacity-100': variant === 'outline',
-      'bg-transparent text-white border border-white/60 hover:bg-white hover:text-exvia-black hover:opacity-100': variant === 'outline-white',
-      'px-4 py-2 text-xs rounded': size === 'sm',
-      'px-6 py-3 text-sm rounded': size === 'md',
-      'px-8 py-4 text-base rounded': size === 'lg',
+      'bg-wine text-milk hover:bg-wine-700': variant === 'primary',
+      'border border-cocoa/25 text-cocoa hover:border-cocoa hover:bg-cocoa/5': variant === 'secondary',
+      'bg-milk text-cocoa hover:bg-milk-50': variant === 'light',
+      'h-10 px-5 text-sm': size === 'sm',
+      'h-12 px-6 text-[15px]': size === 'md',
+      'h-14 px-8 text-base': size === 'lg',
     },
     className
   );
@@ -42,13 +40,14 @@ export function AnimatedButton({
   const content = (
     <>
       <span>{children}</span>
-      {showIcon && <ArrowRight className="w-4 h-4 flex-shrink-0" />}
+      {showIcon && <ArrowRight className="h-4 w-4 flex-shrink-0 transition-transform duration-200 group-hover:translate-x-0.5" strokeWidth={1.5} />}
     </>
   );
 
   if (href) {
+    const external = href.startsWith('http');
     return (
-      <a href={href} className={baseStyles} style={style} target={href.startsWith('http') ? '_blank' : undefined} rel={href.startsWith('http') ? 'noopener noreferrer' : undefined}>
+      <a href={href} className={baseStyles} style={style} target={external ? '_blank' : undefined} rel={external ? 'noopener noreferrer' : undefined}>
         {content}
       </a>
     );

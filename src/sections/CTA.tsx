@@ -5,54 +5,35 @@ import { Send } from 'lucide-react';
 import { ctaConfig } from '@/config';
 
 export function CTA() {
-  if (!ctaConfig.heading && !ctaConfig.description) return null;
-
-  const { ref: sectionRef, isVisible } = useScrollAnimation({ threshold: 0.3 });
+  const { ref, isVisible } = useScrollAnimation({ threshold: 0.3 });
 
   return (
-    <section id="contact" className="relative w-full py-20 sm:py-28 lg:py-48 overflow-hidden">
-      {/* Background */}
+    <section id="contact" className="relative w-full overflow-hidden bg-cocoa py-28 lg:py-40">
       <div className="absolute inset-0">
-        <img src={ctaConfig.backgroundImage} alt="" className="w-full h-full object-cover" />
-        <div className="absolute inset-0 bg-[#0F1F1A]/75" />
-        {/* Subtle green gradient overlay */}
-        <div className="absolute inset-0 bg-gradient-to-br from-psych-green/10 to-transparent" />
+        <img src={ctaConfig.backgroundImage} alt="" className="h-full w-full object-cover object-[center_40%] opacity-50 mix-blend-luminosity" loading="lazy" />
+        <div className="absolute inset-0 bg-cocoa/55" />
       </div>
 
-      <div ref={sectionRef} className="relative z-10 container-large px-5 sm:px-6 lg:px-12">
-        <div className="max-w-3xl mx-auto text-center">
-          {ctaConfig.tags.length > 0 && (
-            <div className={cn('flex flex-wrap justify-center gap-3 mb-8 transition-all duration-800 ease-out-quart', isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4')}>
-              {ctaConfig.tags.map((tag, i) => (
-                <span key={i} className="px-4 py-2 text-xs font-geist-mono text-psych-sage/90 border border-psych-sage/30 rounded-full">{tag}</span>
-              ))}
-            </div>
-          )}
+      <div ref={ref} className={cn('reveal relative container-large px-5 text-center sm:px-8 lg:px-12', isVisible && 'is-in')}>
+        {ctaConfig.tags.length > 0 && (
+          <p className="text-sm text-nude">{ctaConfig.tags.join(' · ')}</p>
+        )}
+        <h2 className="mx-auto mt-6 max-w-3xl text-[clamp(2.5rem,6vw,4.5rem)] leading-[1.02] text-milk">{ctaConfig.heading}</h2>
+        <p className="mx-auto mt-6 max-w-xl text-lg leading-relaxed text-milk/75">{ctaConfig.description}</p>
 
-          {ctaConfig.heading && (
-            <h2 className={cn('font-raleway text-2xl sm:text-3xl lg:text-5xl font-bold text-white leading-tight transition-all duration-800 ease-out-quart', isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6')} style={{ transitionDelay: '100ms' }}>
-              {ctaConfig.heading}
-            </h2>
-          )}
-
-          {ctaConfig.description && (
-            <p className={cn('mt-6 text-lg font-raleway text-white/70 max-w-xl mx-auto leading-relaxed transition-all duration-800 ease-out-quart', isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6')} style={{ transitionDelay: '200ms' }}>
-              {ctaConfig.description}
-            </p>
-          )}
-
-          <div className={cn('flex flex-col sm:flex-row items-center justify-center gap-4 mt-10 transition-all duration-800 ease-out-quart', isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6')} style={{ transitionDelay: '300ms' }}>
-            {ctaConfig.buttonText && (
-              <AnimatedButton href={ctaConfig.buttonHref} variant="primary" size="lg" showIcon className="bg-psych-green text-white hover:bg-psych-green-dark border-0">
-                {ctaConfig.buttonText}
-              </AnimatedButton>
-            )}
-
-            <a href="https://t.me/ekaterina_sovet" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-sm font-raleway text-white/70 hover:text-white transition-colors group cursor-pointer">
-              <Send className="w-4 h-4 text-psych-sage" />
-              <span>@ekaterina_sovet</span>
-            </a>
-          </div>
+        <div className="mt-10 flex flex-col items-center justify-center gap-5 sm:flex-row sm:gap-8">
+          <AnimatedButton href={ctaConfig.buttonHref} variant="light" size="lg" showIcon>
+            {ctaConfig.buttonText}
+          </AnimatedButton>
+          <a
+            href={ctaConfig.buttonHref}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 text-[15px] text-milk/75 transition-colors hover:text-milk"
+          >
+            <Send className="h-4 w-4" strokeWidth={1.5} />
+            @ekaterina_sovet
+          </a>
         </div>
       </div>
     </section>
