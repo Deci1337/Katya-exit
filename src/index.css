@@ -102,3 +102,25 @@
   background: var(--wine);
   color: var(--milk);
 }
+
+/* Admin edit mode ("Закулисье") */
+.editable {
+  border-radius: 4px;
+  outline: 1px dashed color-mix(in srgb, currentColor 35%, transparent);
+  outline-offset: 4px;
+  cursor: text;
+  transition: outline-color 0.15s;
+}
+.editable:hover {
+  outline-color: color-mix(in srgb, currentColor 70%, transparent);
+}
+.editable:focus {
+  outline: 2px solid color-mix(in srgb, currentColor 85%, transparent);
+}
+.editable:empty::before {
+  content: attr(data-placeholder);
+  opacity: 0.45;
+}
+[data-editing] footer {
+  padding-bottom: 7rem;
+}

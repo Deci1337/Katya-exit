@@ -2,9 +2,11 @@ import { useState, useEffect, type MouseEvent } from 'react';
 import { Menu, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { AnimatedButton } from './AnimatedButton';
-import { navigationConfig } from '@/config';
+import { useContent } from '@/content/ContentContext';
+import { EditableText } from '@/content/EditableText';
 
 export function Navigation() {
+  const navigationConfig = useContent().content.navigation;
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
 
@@ -39,25 +41,25 @@ export function Navigation() {
             onClick={(e) => { e.preventDefault(); setIsMenuOpen(false); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
             className="font-display text-2xl font-semibold text-cocoa"
           >
-            {navigationConfig.logo}
+            <EditableText path="navigation.logo" />
           </a>
 
           <div className="hidden items-center gap-8 md:flex">
-            {navigationConfig.links.map((link) => (
+            {navigationConfig.links.map((link, i) => (
               <a
-                key={link.label}
+                key={link.href}
                 href={link.href}
                 onClick={(e) => handleNavClick(e, link.href)}
                 className="text-[15px] text-cocoa/75 transition-colors hover:text-cocoa"
               >
-                {link.label}
+                <EditableText path={`navigation.links.${i}.label`} />
               </a>
             ))}
           </div>
 
           <div className="flex items-center gap-2">
             <AnimatedButton href={navigationConfig.contactHref} size="sm" className="hidden sm:inline-flex">
-              {navigationConfig.contactLabel}
+              <EditableText path="navigation.contactLabel" />
             </AnimatedButton>
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -81,7 +83,7 @@ export function Navigation() {
           <div className="flex flex-col gap-2">
             {navigationConfig.links.map((link) => (
               <a
-                key={link.label}
+                key={link.href}
                 href={link.href}
                 onClick={(e) => handleNavClick(e, link.href)}
                 className="border-b border-cocoa/10 py-4 font-display text-4xl text-cocoa"

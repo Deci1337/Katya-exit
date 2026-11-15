@@ -2,7 +2,8 @@ import { type MouseEvent, type ComponentType } from 'react';
 import { cn } from '@/lib/utils';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 import { ArrowUpRight, Send, Circle, type LucideProps } from 'lucide-react';
-import { footerConfig } from '@/config';
+import { useContent } from '@/content/ContentContext';
+import { EditableText } from '@/content/EditableText';
 
 const VkIcon = (props: LucideProps) => (
   <svg {...props} viewBox="0 0 24 24" fill="currentColor" stroke="none">
@@ -17,6 +18,7 @@ function getIcon(iconName: string): ComponentType<LucideProps> {
 }
 
 export function Footer() {
+  const footerConfig = useContent().content.footer;
   const { ref, isVisible } = useScrollAnimation({ threshold: 0.1 });
 
   const handleNavClick = (e: MouseEvent<HTMLAnchorElement>, href: string) => {
@@ -34,8 +36,8 @@ export function Footer() {
       <div className={cn('reveal container-large px-5 sm:px-8 lg:px-12', isVisible && 'is-in')}>
         <div className="grid gap-12 sm:grid-cols-2 lg:grid-cols-12 lg:gap-8">
           <div className="space-y-5 sm:col-span-2 lg:col-span-6">
-            <a href="#" className="font-display text-3xl font-semibold">{footerConfig.logo}</a>
-            <p className="max-w-xs text-[15px] leading-relaxed text-milk/60">{footerConfig.description}</p>
+            <a href="#" className="font-display text-3xl font-semibold"><EditableText path="footer.logo" /></a>
+            <EditableText path="footer.description" multiline as="p" className="block max-w-xs text-[15px] leading-relaxed text-milk/60" />
             <div className="flex gap-2 pt-1">
               {footerConfig.socialLinks.map((social) => {
                 const Icon = getIcon(social.iconName);
@@ -55,11 +57,11 @@ export function Footer() {
             </div>
           </div>
 
-          {footerConfig.columns.map((column) => (
+          {footerConfig.columns.map((column, ci) => (
             <div key={column.title} className="lg:col-span-3">
-              <h4 className="font-sans text-sm text-milk/45">{column.title}</h4>
+              <EditableText path={`footer.columns.${ci}.title`} as="h4" className="block font-sans text-sm text-milk/45" />
               <ul className="mt-4 space-y-3">
-                {column.links.map((link) => (
+                {column.links.map((link, li) => (
                   <li key={link.label}>
                     <a
                       href={link.href}
@@ -68,7 +70,7 @@ export function Footer() {
                       rel={link.href.startsWith('http') ? 'noopener noreferrer' : undefined}
                       className="group inline-flex items-center gap-1 text-[15px] text-milk/75 transition-colors hover:text-milk"
                     >
-                      {link.label}
+                      <EditableText path={`footer.columns.${ci}.links.${li}.label`} />
                       <ArrowUpRight className="h-3.5 w-3.5 opacity-0 transition-opacity group-hover:opacity-100" strokeWidth={1.5} />
                     </a>
                   </li>
@@ -79,7 +81,7 @@ export function Footer() {
         </div>
 
         {footerConfig.copyright && (
-          <p className="mt-16 border-t border-milk/10 pt-8 text-sm text-milk/45">{footerConfig.copyright}</p>
+          <EditableText path="footer.copyright" as="p" className="mt-16 block border-t border-milk/10 pt-8 text-sm text-milk/45" />
         )}
       </div>
     </footer>
